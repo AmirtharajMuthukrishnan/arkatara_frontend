@@ -7,10 +7,6 @@ export default function HomePage() {
         <p className="intro">
           A modern jewellery experience, beginning in Bengaluru with Silver.
         </p>
-        <div className="availability" aria-label="Launch availability">
-          <span>Silver · Available</span>
-          <span>Gold · Coming soon</span>
-        </div>
       </section>
     </main>
   );
