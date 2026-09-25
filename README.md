@@ -32,6 +32,8 @@ The API helper rejects an unversioned base, embedded credentials, query strings 
 
 The helper does not retry or follow redirects. A successful `204` or `HEAD` request returns `undefined`; otherwise it parses JSON. Type parameters describe expected data and do not replace runtime validation for domain contracts. Callers provide serialized request bodies and their content type when needed. Credentials are omitted by default; future staff flows must deliberately implement their authenticated session and CSRF requirements.
 
+Task 2 adds runtime-validated contracts and `getReferenceData` / `checkServiceability` in `src/lib/catalog-contracts.ts`. Exact price/weight inputs remain decimal strings and DRAFT pricing does not imply a sale price. Coverage is distinct from booking availability. Shared API semantics and remaining policy gates are documented only in [ARCHITECTURE.md](../docs/ARCHITECTURE.md) and [DATA_MODEL.md](../docs/DATA_MODEL.md).
+
 `src/app/error.tsx` provides a recoverable page fallback with a safe message. It does not turn API or payment errors into a successful business outcome.
 
 ## Quality checks
@@ -52,4 +54,4 @@ CI installs from `package-lock.json` with `npm ci` and uses the Node version in 
 
 Deployment ownership and hosting are still pending selection. Once selected, releases must preserve the commit, environment and build identity, run an appropriate smoke check, and retain the previous compatible artifact for recovery. A frontend rollback must remain compatible with the deployed `/api/v1/` backend; coordinate incompatible changes before release.
 
-The single canonical project documentation is [../docs/](../docs/), with [../AGENTS.md](../AGENTS.md) as its operating guide. Approved BD-14 tracks it in a separate documentation-only root repository; see the [workspace README](../README.md) for the clone layout. Documentation remote setup/publication is separate, and this application clone alone does not include the shared context. Do not duplicate the documents here.
+The single canonical project documentation is [../docs/](../docs/), with [../AGENTS.md](../AGENTS.md) as its operating guide. Approved BD-14 tracks it in a separate documentation-only root repository; see the [workspace README](../README.md) for the clone layout. The documentation remote is published, and this application clone alone does not include the shared context. Do not duplicate the documents here.

@@ -4,7 +4,7 @@ Read the [shared operating guide](../AGENTS.md) and canonical [business context]
 
 Shared documentation exists only in ../docs/. Do not recreate a local copy. If this repository is checked out alone and those files are unavailable, obtain the canonical context before work that depends on it; do not reconstruct policy from assumptions.
 
-Task 1 foundation implementation is authorized as of 2026-09-19. Later storefront/domain behavior remains governed by the backlog and unresolved-decision gates.
+Task 1 is verified complete. Task 2 typed API contracts are authorized as of 2026-09-24. Later storefront/domain behavior remains governed by the backlog and unresolved-decision gates; reference activation alone never grants booking permission.
 
 Once authorized, follow the Next.js/React direction with a premium mobile-first catalogue, guest localStorage cart and a separate authenticated staff experience. The backend owns pricing, stock, plan limits, tax, serviceability and payment status; local state never reserves stock.
 
