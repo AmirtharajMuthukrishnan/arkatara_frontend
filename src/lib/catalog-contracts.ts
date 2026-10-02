@@ -45,7 +45,10 @@ export interface ProductVariantSummary {
 
 declare const decimalString: unique symbol;
 
-/** Exact decimal text; do not coerce money or weight to a JavaScript Number. */
+/**
+ * Preserve exact supplied money/weight text without JavaScript Number rounding.
+ * Refs: DECISIONS.md D-17.
+ */
 export type DecimalString = string & { readonly [decimalString]: true };
 
 export interface PriceCharge {
@@ -66,14 +69,22 @@ interface DraftPriceInputs {
   charges: PriceCharge[];
 }
 
-/** Draft input representation only: neither branch is an approved sale price. */
+/**
+ * Both modes represent draft inputs, not an approved sale price. Pricing and
+ * commitment policy remain open; this contract does not choose a formula.
+ * Refs: BUSINESS_RULES.md R-12; DECISIONS.md D-17, BD-04.
+ */
 export type PriceDisplay = DraftPriceInputs &
   (
     | { mode: "FIXED"; fixed_amount: DecimalString | null }
     | { mode: "WEIGHT_BASED"; fixed_amount: null }
   );
 
-/** A backend readiness result, never inferred from reference-data activation. */
+/**
+ * Preserve backend bookability; reference activation or READY alone cannot
+ * grant it, and coming-soon offerings remain unbookable.
+ * Refs: BUSINESS_RULES.md R-07, R-09.
+ */
 export type Availability =
   | {
       state: "UNCONFIGURED" | "UNAVAILABLE" | "COMING_SOON";
@@ -90,7 +101,11 @@ export interface ServiceabilityQuery {
   postal_code: string;
 }
 
-/** CONFIGURED confirms coverage configuration only; it does not enable booking. */
+/**
+ * CONFIGURED confirms coverage only, not booking or a fulfilling hub.
+ * Fulfilment and eligibility policy remain open.
+ * Refs: BUSINESS_RULES.md R-07, R-09; DECISIONS.md D-17, BD-08, BD-13.
+ */
 export interface ServiceabilityResult {
   market_code: string;
   country_code: string;
@@ -182,7 +197,11 @@ function reference(value: unknown): ReferenceSummary {
   };
 }
 
-/** Validate untrusted JSON while allowing additive fields in the same schema. */
+/**
+ * Validate server-supplied references without city/material branches, so new
+ * offerings fit the same contract. Additive fields remain compatible.
+ * Refs: BUSINESS_RULES.md R-10, R-13.
+ */
 export function parseReferenceData(value: unknown): ReferenceData {
   const data = object(value);
   if (data.schema_version !== 1) {

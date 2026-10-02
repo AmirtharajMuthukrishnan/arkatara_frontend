@@ -19,7 +19,7 @@ Next.js/React application for the mobile-first ARKA TARA customer and staff expe
 
 NEXT_PUBLIC_API_BASE_URL must point to the versioned backend boundary ending in /api/v1/.
 
-The backend must be running separately to use API calls. The current landing page is a foundation placeholder and does not fetch catalogue or availability data.
+The backend must be running separately. The landing, collection and product pages read the published catalogue on the server; an empty catalogue and a temporary API failure have different messages.
 
 ## Environment separation
 
@@ -34,6 +34,20 @@ The helper does not retry or follow redirects. A successful `204` or `HEAD` requ
 
 Task 2 adds runtime-validated contracts and `getReferenceData` / `checkServiceability` in `src/lib/catalog-contracts.ts`. Exact price/weight inputs remain decimal strings and DRAFT pricing does not imply a sale price. Coverage is distinct from booking availability. Shared API semantics and remaining policy gates are documented only in [ARCHITECTURE.md](../docs/ARCHITECTURE.md) and [DATA_MODEL.md](../docs/DATA_MODEL.md).
 
+Task 3 adds `parseProductMediaMetadata` in `src/lib/media-contracts.ts`, validating the backend's versioned private-media shape, roles, identities and content metadata. It rejects public delivery or storage-key fields; it does not fetch or publish product media. See the canonical [media boundary](../docs/INTEGRATIONS.md#object-storage--task-3).
+
+## Storefront and search configuration
+
+**Presentation status:** The owner has not yet supplied approved UI, visual direction, branding or screen-level designs. Existing Task 4 styling and page composition are unapproved provisional work. Follow the canonical [D-21 design gate](../docs/DECISIONS.md#d-21--frontend-visual-design-awaits-owner-input): continue necessary technical foundations, using only minimal unstyled or clearly temporary functional placeholders where unavoidable. Frontend requirements remain in their original tasks; final presentation and visual acceptance are pending. This documentation clarification does not remove or replace existing application code.
+
+Task 4 adds `/`, `/collections`, `/collections/[slug]`, `/products/[slug]` and `/how-it-works`. Only explicitly published backend content supplies catalogue pages. City/material filters preserve the selected browsing context; stock at a city hub does not promise serviceability or an accepted booking. Prices and media remain absent until their reviewed publication workflows are available. The trial CTA is deliberately disabled; cart and booking belong to Tasks 5–6.
+
+Page metadata and factual structured data use the intended public origin `https://arkatara.in`. `SITE_INDEXING_ENABLED` defaults to `false`; enable it only for a reviewed production release. Preview/staging pages must remain non-indexable. Filter/tracking variants are non-indexable and use the base collection canonical; unfiltered collection pagination retains its own canonical page number. Genuine missing/withdrawn pages render a 404. Temporary failures on catalogue-dependent routes use the server error boundary; the homepage keeps its useful static content and a catalogue-unavailable message. Invalid filters have a separate selection-recovery message.
+
+`CATALOGUE_MEDIA_ORIGINS` is an optional comma-separated list of reviewed HTTPS origins, with no paths, credentials, queries or fragments. It defaults to empty. The public image contract validates origins, dimensions and alt text; Next Image uses the same allowlist. Rebuild after changing the list. This is a future delivery boundary, not permission to expose private Task 3 attachments; the current API returns no public media. No provider has been selected.
+
+The canonical [Task 4 record](../docs/TASKS.md#4-customer-storefront-and-scalable-ui) lists delivered scope and remaining business/review gates. Robots/sitemaps, deployed redirects/domain checks, Search Console/Bing ownership and measured production performance are owned by Task 10.
+
 `src/app/error.tsx` provides a recoverable page fallback with a safe message. It does not turn API or payment errors into a successful business outcome.
 
 ## Quality checks
@@ -44,7 +58,7 @@ Task 2 adds runtime-validated contracts and `getReferenceData` / `checkServiceab
 - npm run test:run
 - npm run build
 
-The initial page is a lightweight launch placeholder. Storefront catalogue, Trial Cart, checkout, agent portal, payments and messaging belong to later authorized tasks.
+Trial Cart, checkout, agent portal, payments and messaging remain later tasks. A successful storefront build does not authorize live booking or indexation.
 
 ## Review and delivery workflow
 

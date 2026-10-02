@@ -2,7 +2,7 @@
 
 export default function PageError({ reset }: { reset: () => void }) {
   return (
-    <main className="home">
+    <main id="main-content" className="home">
       <section className="hero" aria-labelledby="error-title">
         <p className="eyebrow">ARKA TARA</p>
         <h1 id="error-title">This page could not load.</h1>
