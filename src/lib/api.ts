@@ -11,6 +11,8 @@ export function getApiBaseUrl(
   if (!["http:", "https:"].includes(url.protocol)) {
     throw new Error("NEXT_PUBLIC_API_BASE_URL must use HTTP or HTTPS.");
   }
+  // This configuration is browser-visible; embedded credentials are not safe.
+  // Refs: DECISIONS.md D-14.
   if (url.username || url.password || url.search || url.hash) {
     throw new Error(
       "NEXT_PUBLIC_API_BASE_URL must not contain credentials, a query or a fragment.",
@@ -101,6 +103,7 @@ function errorDetails(payload: unknown): unknown {
  * Request JSON without retries or redirects. The HTTP response owns its status;
  * backend validation details remain structured for deliberate presentation.
  * The caller validates the response shape before relying on business values.
+ * Refs: BUSINESS_RULES.md R-07.
  */
 export async function requestJson<T>(
   path: string,
